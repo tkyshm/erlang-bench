@@ -35,11 +35,12 @@ handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
 
-handle_cast({echo, Msg, FromSender}, State) ->
-    FromSender ! Msg,
+handle_cast({echo, FromNode, SenderName, Msg}, State) ->
+    buff_router:route(FromNode, SenderName, Msg),
     {noreply, State}.
 
-handle_info(_Info, State) ->
+handle_info({echo, FromNode, SenderName, Msg}, State) ->
+    buff_router:route(FromNode, SenderName, Msg),
     {noreply, State}.
 
 terminate(_Reason, _State) ->
