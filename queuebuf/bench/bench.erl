@@ -10,6 +10,8 @@ main([NodeStr]) ->
     io:format("start bench at ~p~n~n", [node()]),
     io:format("timeout\tsent\ttime(msec)\trate(req/sec)~n"),
 
+    buff_router:start_link(),
+
     lists:foreach(fun(N) ->
         bench_server:start_bench(N, Node)
     end, [1000,10000,50000,100000,200000]).
@@ -20,6 +22,7 @@ load() ->
         _ -> file:make_dir("./ebin")
     end,
     compile:file("./bench_server.erl", [{outdir, "./ebin"}]),
+    compile:file("../src/buff_router.erl", [{outdir, "./ebin"}]),
     code:add_patha("./ebin").
 
 chdir() ->

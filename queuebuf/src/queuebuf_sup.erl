@@ -27,15 +27,24 @@ init([]) ->
       period    => 3600
      },
 
+    BuffSpec = #{
+      id       => 'buff_router',
+      start    => {'buff_router', start_link, []},
+      restart  => permanent,
+      shutdown => 2000,
+      type     => worker,
+      modules  => ['buff_router']
+     },
+
     Spec = #{
       id       => 'echo_server',
       start    => {'echo_server', start_link, []},
       restart  => permanent,
       shutdown => 2000,
-      type     => supervisor ,
+      type     => worker,
       modules  => ['echo_server']
      },
-    {ok, {SupFlags, [Spec]} }.
+    {ok, {SupFlags, [Spec, BuffSpec]} }.
 
 %%====================================================================
 %% Internal functions

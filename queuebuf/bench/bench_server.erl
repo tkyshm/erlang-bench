@@ -37,7 +37,7 @@ start_bench(Num, Node) ->
 
     register(bench_server, Pid),
 
-    send_echo(Num, bench_server, Node),
+    send_echo(Num, Node),
 
     receive
         finish ->
@@ -61,11 +61,11 @@ loop(Num, State = #state{count=Cnt, timeout_cnt=TCnt}) ->
         loop(Num, State#state{timeout_cnt=TCnt+1})
     end.
 
-send_echo(0, _, _) ->
+send_echo(0, _) ->
     ok;
-send_echo(N, FromPid, ToNode) ->
-    spawn(gen_server, cast, [{echo_server, ToNode}, {echo, <<"echo message">>, {FromPid, node()}}]),
-    send_echo(N-1, FromPid, ToNode).
+send_echo(N, ToNode) ->
+    spawn(buff_router, route, [ToNode, echo_server, {echo, node(), bench_server, <<"echo message">>}]),
+    send_echo(N-1, ToNode).
 
 %% private
 print_result(Start, End, Num, TNum) ->
