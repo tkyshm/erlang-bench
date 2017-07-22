@@ -1,6 +1,6 @@
 #!/usr/bin/env escript
 %% -*- erlang -*-
-%%! -smp enable -name bench@127.0.0.1 -setcookie queuebuf +K true +P 500000
+%%! -smp enable -name bench@127.0.0.1 -setcookie queuebuf +K true +P 1000000
 main([NodeStr]) ->
     chdir(),
     load(),
@@ -14,7 +14,7 @@ main([NodeStr]) ->
 
     lists:foreach(fun(N) ->
         bench_server:start_bench(N, Node)
-    end, [1000,10000,50000,100000,200000]).
+    end, [1000,10000,50000,100000,200000,300000,500000]).
 
 load() ->
     case filelib:ensure_dir("./ebin") of
