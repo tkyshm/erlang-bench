@@ -1,0 +1,8 @@
+-name 'benchman@127.0.0.1'
+
+-setcookie gcbench_cookie
+
++K true
++A30
+
++P 1000000
