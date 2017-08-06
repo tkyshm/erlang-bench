@@ -36,6 +36,8 @@ start_link(Router) ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [Router], []).
 
 init([Router]) ->
+    MQD = application:get_env(gcbench, message_queue_data, on_heap),
+    process_flag(message_queue_data, MQD),
     {ok, #state{router=Router}}.
 
 handle_call(_Request, _From, State) ->

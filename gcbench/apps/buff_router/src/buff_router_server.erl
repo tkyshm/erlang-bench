@@ -43,6 +43,8 @@ route(ToNode, Pname, Msg) ->
     gen_server:cast(?SERVER, {enqueue, ToNode, Pname, Msg}).
 
 init([]) ->
+    MQD = application:get_env(buff_router, message_queue_data, on_heap),
+    process_flag(message_queue_data, MQD),
     {ok, #state{}, ?TIMEOUT}.
 
 handle_call(_Request, _From, State) ->

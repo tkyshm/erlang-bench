@@ -46,6 +46,8 @@ start_link() ->
 %%%===================================================================
 
 init([]) ->
+    MQD = application:get_env(benchman, message_queue_data, on_heap),
+    process_flag(message_queue_data, MQD),
     {ok, #state{}}.
 
 handle_call({prepare, Num}, _From, State) ->
