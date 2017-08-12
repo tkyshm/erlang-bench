@@ -10,7 +10,8 @@
 %% Application callbacks
 -export([start/2, stop/1]).
 -export([start_bench/2,
-         start_bench_preset/1]).
+         start_bench_preset/1
+        ]).
 
 %%====================================================================
 %% API
@@ -39,7 +40,7 @@ start_bench(Num, Node) ->
 
     %% 終了メッセージが来るまで待機
     receive
-        finish -> ok
+        {finish, Diff, Rate} -> {Diff, Rate}
     end.
 
 -spec start_bench_preset(node()) -> ok.
