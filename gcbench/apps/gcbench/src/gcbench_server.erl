@@ -44,18 +44,18 @@ handle_call(_Request, _From, State) ->
     Reply = ok,
     {reply, Reply, State}.
 
-handle_cast({echo, FromNode, SenderName, Msg}, State = #state{router=Router}) when Router =:= undefined ->
+handle_cast({echo, FromNode, SenderName, Msg}, State = #state{router=undefined}) ->
     {SenderName, FromNode} ! Msg,
     {noreply, State};
-handle_cast({buff_router, {echo, FromNode, SenderName, Msg}}, State = #state{router=Router}) ->
-    Router:route(FromNode, SenderName, Msg),
+handle_cast({buff_router, {echo, FromNode, SenderName, Msg}}, State = #state{router=buff_router}) ->
+    buff_router:route(FromNode, SenderName, Msg),
     {noreply, State}.
 
-handle_info({echo, FromNode, SenderName, Msg}, State = #state{router=Router}) when Router =:= undefined ->
+handle_info({echo, FromNode, SenderName, Msg}, State = #state{router=undefined}) ->
     {SenderName, FromNode} ! Msg,
     {noreply, State};
-handle_info({buff_router, {echo, FromNode, SenderName, Msg}}, State = #state{router=Router}) ->
-    Router:route(FromNode, SenderName, Msg),
+handle_info({buff_router, {echo, FromNode, SenderName, Msg}}, State = #state{router=buff_router}) ->
+    buff_router:route(FromNode, SenderName, Msg),
     {noreply, State}.
 
 terminate(_Reason, _State) ->

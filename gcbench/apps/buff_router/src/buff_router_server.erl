@@ -75,7 +75,8 @@ buffer_message(ToNode, Msg, Buff) ->
         {value, {ToNode, {_, Msgs}}} ->
             case length(Msgs) >= ?BUFF_MAXSIZE of
                 false ->
-                    lists:keyreplace(ToNode, 1, Buff, {ToNode, {erlang:system_time(second), [Msg|Msgs]}});
+                    Time = erlang:system_time(second),
+                    lists:keyreplace(ToNode, 1, Buff, {ToNode, {Time, [Msg|Msgs]}});
                 true ->
                     gen_server:cast({?SERVER, ToNode}, {send, [Msg|Msgs]}),
                     lists:keydelete(ToNode, 1, Buff)

@@ -61,7 +61,9 @@ handle_cast(_Msg, State) ->
 
 handle_info(timeout, State = #state{timeout=TCnt}) ->
     {noreply, State#state{timeout=TCnt+1}, ?TIMEOUT};
-handle_info(_Msg, State = #state{start=Start,fin_pid=FinPid,count=Cnt,timeout=TCnt,num=Num}) when Num-1 =:= Cnt+TCnt ->
+handle_info(_,
+            State = #state{start=Start, fin_pid=FinPid, count=Cnt, timeout=TCnt, num=Num}
+           ) when Num-1 =:= Cnt+TCnt ->
     Diff = erlang:system_time(millisecond) - Start,
     Rate = Num * 1000 / Diff,
     print_result(Diff, Rate, Cnt+1, TCnt),
@@ -86,4 +88,4 @@ send_message(N, Req = {Module, Fun, Args}) ->
     send_message(N-1, Req).
 
 print_result(Diff, Rate, Cnt, TCnt) ->
-    io:format("~p\t~p\t~p\t~f~n",[TCnt, Cnt, Diff, Rate]).
+    io:format("~p\t~p\t~p\t~f~n", [TCnt, Cnt, Diff, Rate]).

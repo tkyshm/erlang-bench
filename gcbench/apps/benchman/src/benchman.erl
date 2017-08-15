@@ -22,16 +22,17 @@ start_bench(Num, Node) ->
     ok = gen_server:call(benchman_server, {prepare, Num}),
 
     %% パラメータ
+    Msg = <<"hello hello bacon!!">>,
     Req = case application:get_env(gcbench, router, gen_server) of
         buff_router ->
             M = buff_router,
             F = route,
-            A = [Node, gcbench_server, {echo, node(), benchman_server, <<"hello hello bacon!!">>}],
+            A = [Node, gcbench_server, {echo, node(), benchman_server, Msg}],
             {M, F, A};
         gen_server ->
             M = gen_server,
             F = cast,
-            A = [{gcbench_server, Node}, {echo, node(), benchman_server, <<"hello hello bacon!!">>}],
+            A = [{gcbench_server, Node}, {echo, node(), benchman_server, Msg}],
             {M, F, A}
     end,
 
@@ -50,7 +51,7 @@ start_bench_preset(Node) ->
 
     lists:foreach(fun(N) ->
         start_bench(N, Node)
-    end, [1000,10000,50000,100000,200000,300000,500000]).
+    end, [1000, 10000, 50000, 100000, 200000]). %,300000,500000]).
 
 start(_StartType, _StartArgs) ->
     benchman_sup:start_link().
